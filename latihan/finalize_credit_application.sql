@@ -42,11 +42,16 @@ BEGIN
     raise EXCEPTION 'Processed by user ID cannot be null' using ERRCODE = '22004';
     end if;
 
-    if not exist (
-        select 1 from fifapp_credit_new.users
-        where id = p_processed_by_user_id
-    ) then raise EXCEPTION 'Processed by user not found: %', p_processed_by_user_id using ERRCODE = 'P0002';
-    END IF;
+    IF NOT EXISTS (
+    SELECT 1 
+    FROM fifapp_credit_new.users
+    WHERE id = p_processed_by_user_id
+	) THEN 
+	    RAISE EXCEPTION 'Processed by user not found: %', p_processed_by_user_id 
+	    USING ERRCODE = 'P0002';
+	END IF;
+
+    
     SELECT
         ca.status, ca.loan_amount, ca.vehicle_price, ca.dp_amount, ca.tenor_months, 
         c.birth_date, c.monthly_income
@@ -56,15 +61,15 @@ BEGIN
     FROM fifapp_credit_new.credit_applications ca
     JOIN fifapp_credit_new.customers c ON ca.customer_id = c.id
     WHERE ca.id = p_application_id
-    FOR UPDATE;
+    FOR UPDATE OF ca;
 
-
-    IF v_status_lama IS NULL THEN
+	IF v_status_lama IS NULL THEN
         RAISE EXCEPTION 'Aplikasi kredit dengan ID % tidak ditemukan.', p_application_id;
     ELSIF v_status_lama IN ('APPROVED', 'REJECTED', 'CANCELLED') THEN
         RAISE EXCEPTION 'Aplikasi ID % tidak dapat diproses karena sudah berstatus akhir: %', 
                         p_application_id, v_status_lama;
     END IF;
+
 
     v_customer_age := EXTRACT(YEAR FROM AGE(CURRENT_DATE, v_birth_date));
     v_loan_amount_baru := calculate_loan_amount(v_vehicle_price, v_dp_amount);
@@ -103,6 +108,15 @@ BEGIN
     ELSE
         v_decision_reason := format('APPROVED: Parameter keuangan sehat. DBR %s%% dengan tingkat risiko %s.', v_dbr_percentage, v_risk_level);
         v_approved_amount := v_loan_amount_baru;
+    END IF;
+
+    IF EXISTS (
+        SELECT 1
+        FROM fifapp_credit_new.risk_assessments
+        WHERE credit_application_id = p_application_id
+    ) THEN
+        RAISE EXCEPTION 'Risk assessment already exists for application ID: %', p_application_id
+            USING ERRCODE = '23505';
     END IF;
 
     INSERT INTO fifapp_credit_new.risk_assessments (
@@ -173,7 +187,7 @@ END $$;
 
 UPDATE fifapp_credit_new.credit_applications SET status = 'SUBMITTED' WHERE id = 3;
 
-CALL finalize_credit_application(3, 892);
+CALL finalize_credit_application(355, 1000);
 
 SELECT id, user_id, action, old_value, new_value, ip_address, created_at 
 FROM fifapp_credit_new.audit_logs 
