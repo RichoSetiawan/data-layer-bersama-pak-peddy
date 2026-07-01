@@ -1,0 +1,12 @@
+package com.example.springdemo.credit_customer_entity_manager.service;
+
+
+import com.example.springdemo.credit_customer_entity_manager.dto.CreateCreditApplicationRequest;
+import com.example.springdemo.credit_customer_entity_manager.dto.CreditApplicationResponse;
+
+public interface CreditApplicationService {
+
+    CreditApplicationResponse createCreditApplication(CreateCreditApplicationRequest request);
+
+    CreditApplicationResponse getCreditApplicationById(Long id);
+}

@@ -1,4 +1,26 @@
 package com.example.springdemo.credit_customer_entity_manager.dao;
 
-public class CustomerDAOJpaImpl {
+import com.example.springdemo.credit_customer_entity_manager.entity.Customer;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+@RequiredArgsConstructor
+public class CustomerDAOJpaImpl implements CustomerDAO{
+    private final EntityManager entityManager;
+
+    @Override
+    public List<Customer> findAll(){
+        TypedQuery<Customer> query = entityManager.createQuery("from Customer", Customer.class);
+        return  query.getResultList();
+    }
+
+    @Override
+    public Customer findById(Long id){
+        return entityManager.find(Customer.class, id);
+    }
 }
