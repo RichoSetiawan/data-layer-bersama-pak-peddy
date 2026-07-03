@@ -24,4 +24,4 @@ GRANT CREATE PROCEDURE TO fifapp_credit;
 GRANT CREATE TRIGGER TO fifapp_credit;
 
 -- 6. VERIFIKASI (Opsional: Cek apakah user sudah terbuat)
- SELECT username FROM dba_users WHERE username = 'FIFAPP_CREDIT';
+SELECT username FROM dba_users WHERE username = 'FIFAPP_CREDIT';

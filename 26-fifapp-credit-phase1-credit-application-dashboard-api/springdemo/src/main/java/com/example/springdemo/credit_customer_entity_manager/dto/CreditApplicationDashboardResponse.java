@@ -1,0 +1,78 @@
+package com.example.springdemo.credit_customer_entity_manager.dto;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+public class CreditApplicationDashboardResponse {
+
+    private Long branchId;
+
+    private Long totalApplications;
+
+    private BigDecimal totalLoanAmount;
+
+    private BigDecimal averageLoanAmount;
+
+    private BigDecimal minimumLoanAmount;
+
+    private BigDecimal maximumLoanAmount;
+
+    private List<DashboardGroupResponse> applicationsByStatus;
+
+    private List<DashboardGroupResponse> applicationsByTenorMonth;
+
+    private List<DashboardGroupResponse> applicationsByVehicleBrand;
+
+    public CreditApplicationDashboardResponse(Long branchId, Long totalApplications, BigDecimal totalLoanAmount,
+                                              BigDecimal averageLoanAmount, BigDecimal minimumLoanAmount,
+                                              BigDecimal maximumLoanAmount,
+                                              List<DashboardGroupResponse> applicationsByStatus,
+                                              List<DashboardGroupResponse> applicationsByTenorMonth,
+                                              List<DashboardGroupResponse> applicationsByVehicleBrand) {
+        this.branchId = branchId;
+        this.totalApplications = totalApplications;
+        this.totalLoanAmount = totalLoanAmount;
+        this.averageLoanAmount = averageLoanAmount;
+        this.minimumLoanAmount = minimumLoanAmount;
+        this.maximumLoanAmount = maximumLoanAmount;
+        this.applicationsByStatus = applicationsByStatus;
+        this.applicationsByTenorMonth = applicationsByTenorMonth;
+        this.applicationsByVehicleBrand = applicationsByVehicleBrand;
+    }
+
+    public Long getBranchId() {
+        return branchId;
+    }
+
+    public Long getTotalApplications() {
+        return totalApplications;
+    }
+
+    public BigDecimal getTotalLoanAmount() {
+        return totalLoanAmount;
+    }
+
+    public BigDecimal getAverageLoanAmount() {
+        return averageLoanAmount;
+    }
+
+    public BigDecimal getMinimumLoanAmount() {
+        return minimumLoanAmount;
+    }
+
+    public BigDecimal getMaximumLoanAmount() {
+        return maximumLoanAmount;
+    }
+
+    public List<DashboardGroupResponse> getApplicationsByStatus() {
+        return applicationsByStatus;
+    }
+
+    public List<DashboardGroupResponse> getApplicationsByTenorMonth() {
+        return applicationsByTenorMonth;
+    }
+
+    public List<DashboardGroupResponse> getApplicationsByVehicleBrand() {
+        return applicationsByVehicleBrand;
+    }
+}
